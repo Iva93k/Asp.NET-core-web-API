@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using ASPNETCoreWithVueJs.Models;
+using Microsoft.AspNetCore.HttpOverrides;
+using ASPNETCoreWithVueJs;
+using ASPNETCoreWithVueJs.Extensions;
 
 namespace ASPNETCoreWithVueJs
 {
@@ -27,6 +30,8 @@ namespace ASPNETCoreWithVueJs
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigureCors();
+            services.ConfigureIISIntegration();
             services.AddDbContext<CoreDbContext>(op => op.UseSqlServer(Configuration.GetConnectionString("Database")));
             services.AddControllers();
         }
@@ -40,6 +45,14 @@ namespace ASPNETCoreWithVueJs
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseCors("CorsPolicy");
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
 
             app.UseRouting();
 
