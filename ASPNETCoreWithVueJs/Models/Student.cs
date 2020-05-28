@@ -7,6 +7,10 @@ namespace ASPNETCoreWithVueJs.Models
 {
     public partial class Student
     {
+        /*public Student()
+        {
+            this.Course = new HashSet<Course>();
+        }*/
         [Key]
         [Column("PKStudentID")]
         public int PkstudentId { get; set; }
@@ -26,5 +30,10 @@ namespace ASPNETCoreWithVueJs.Models
         [ForeignKey(nameof(StudentStatusId))]
         [InverseProperty("Student")]
         public virtual StudentStatus StudentStatus { get; set; }
+
+        public ICollection<CoursesStudents> CoursesStudents { get; set; }
+
+        //public virtual ICollection<Course> Course { get; set; }
+
     }
 }

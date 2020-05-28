@@ -45,6 +45,8 @@ namespace ASPNETCoreWithVueJs.Controllers
             //var student = await _context.Student.FindAsync(id);
             var student = await _context.Student
                         .Include(i => i.StudentStatus)
+                        .Include(cs => cs.CoursesStudents)
+                        .ThenInclude(c => c.Course)
                         .FirstOrDefaultAsync(i => i.PkstudentId == id);
 
             if (student == null)

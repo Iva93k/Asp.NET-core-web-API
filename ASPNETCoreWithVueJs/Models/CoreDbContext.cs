@@ -17,6 +17,9 @@ namespace ASPNETCoreWithVueJs.Models
 
         public virtual DbSet<Student> Student { get; set; }
         public virtual DbSet<StudentStatus> StudentStatus { get; set; }
+        public virtual DbSet<Course> Course { get; set; }
+
+        public virtual DbSet<CoursesStudents> CoursesStudents { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -45,6 +48,25 @@ namespace ASPNETCoreWithVueJs.Models
             {
                 entity.HasKey(e => e.PkstudentStatusId)
                     .HasName("PK__StudentS__5BEEBD4FB5D5165A");
+            });
+
+            modelBuilder.Entity<Course>(entity =>
+            {
+                entity.HasKey(e => e.PkcourseId)
+                    .HasName("PK__Course__5655AD102DDA3DE8");
+            });
+
+            modelBuilder.Entity<CoursesStudents>(entity =>
+            {
+                entity.HasKey(cs => new { cs.CourseID, cs.StudentID });
+
+                entity.HasOne(cs => cs.Course)
+                .WithMany(c => c.CoursesStudents)
+                .HasForeignKey(cs => cs.CourseID);
+
+                entity.HasOne(cs => cs.Student)
+                .WithMany(s => s.CoursesStudents)
+                .HasForeignKey(cs => cs.StudentID);
             });
 
             OnModelCreatingPartial(modelBuilder);
