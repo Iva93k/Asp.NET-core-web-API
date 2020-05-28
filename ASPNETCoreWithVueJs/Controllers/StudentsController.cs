@@ -33,7 +33,7 @@ namespace ASPNETCoreWithVueJs.Controllers
                 return students;
             }*/
 
-            return await _context.Student.ToListAsync();
+            return await _context.Student.AsNoTracking().Include(i => i.StudentStatus).ToListAsync();
             //return await _context.Student.FromSqlRaw<Student>("dbo.spGetStudents").ToListAsync();
         }
 
@@ -41,7 +41,11 @@ namespace ASPNETCoreWithVueJs.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Student>> GetStudent(int id)
         {
-            var student = await _context.Student.FindAsync(id);
+
+            //var student = await _context.Student.FindAsync(id);
+            var student = await _context.Student
+                        .Include(i => i.StudentStatus)
+                        .FirstOrDefaultAsync(i => i.PkstudentId == id);
 
             if (student == null)
             {

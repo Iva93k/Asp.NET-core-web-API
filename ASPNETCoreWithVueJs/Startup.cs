@@ -15,6 +15,7 @@ using ASPNETCoreWithVueJs.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 using ASPNETCoreWithVueJs;
 using ASPNETCoreWithVueJs.Extensions;
+using Newtonsoft.Json;
 
 namespace ASPNETCoreWithVueJs
 {
@@ -34,6 +35,9 @@ namespace ASPNETCoreWithVueJs
             services.ConfigureIISIntegration();
             services.AddDbContext<CoreDbContext>(op => op.UseSqlServer(Configuration.GetConnectionString("Database")));
             services.AddControllers();
+            services.AddMvc(option => option.EnableEndpointRouting = false)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
