@@ -25,13 +25,19 @@ namespace ASPNETCoreWithVueJs.Controllers
         public async Task<ActionResult<IEnumerable<Course>>> GetCourse()
         {
             return await _context.Course.ToListAsync();
+            //return _context.Course.Include("CoursesStudents.Student").ToList();
         }
 
         // GET: api/Courses/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Course>> GetCourse(int id)
         {
-            var course = await _context.Course.FindAsync(id);
+            //var course = await _context.Course.FindAsync(id);
+
+            var course = await _context.Course.AsNoTracking()
+                        .Include(i => i.CoursesStudents)
+                        .ThenInclude(s => s.Student)
+                        .FirstOrDefaultAsync(i => i.PkcourseId == id);
 
             if (course == null)
             {
